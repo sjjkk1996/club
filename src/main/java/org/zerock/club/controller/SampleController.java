@@ -1,9 +1,11 @@
 package org.zerock.club.controller;
 
 import lombok.extern.log4j.Log4j2;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.zerock.club.security.dto.ClubAuthMemberDTO;
 
 import javax.swing.plaf.PanelUI;
 
@@ -16,11 +18,13 @@ public class SampleController {
         log.info("exAll.......");
     }
     @GetMapping("/member")
-    public void exMember(){
+    public void exMember(@AuthenticationPrincipal ClubAuthMemberDTO clubAuthMember){
         log.info("exMember.......");
+        log.info("---------------------");
+        log.info(clubAuthMember);
     }
     @GetMapping("/admin")
     public void exAdmin(){
-        log.info("exAdmib.......");
+        log.info("exAdmin.......");
     }
 }
