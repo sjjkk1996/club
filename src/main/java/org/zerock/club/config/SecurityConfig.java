@@ -10,8 +10,13 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.zerock.club.security.filter.ApiCheckFilter;
+import org.zerock.club.security.filter.ApiLoginFilter;
+import org.zerock.club.security.handler.ApiLoginFailHandler;
 import org.zerock.club.security.handler.ClubLoginSuccessHandler;
 import org.zerock.club.security.service.ClubUserDetailsService;
+import org.zerock.club.security.util.JWTUtil;
 
 @Configuration
 @Log4j2
@@ -35,11 +40,16 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.logout();
         http.oauth2Login().successHandler(successHandler());
         http.rememberMe().tokenValiditySeconds(60*60*24*7).userDetailsService(userDetailsService);
+        http.addFilterBefore(apiCheckFilter(),
+                UsernamePasswordAuthenticationFilter.class);
+        http.addFilterBefore(apiLoginFilter(),
+                UsernamePasswordAuthenticationFilter.class);
     }
     @Bean
     public ClubLoginSuccessHandler successHandler() {
         return new ClubLoginSuccessHandler(passwordEncoder());
     }
+
 
 //    @Override
 //    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
@@ -47,4 +57,22 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 //                .password("$2a$10$g8nn5Ak74oZFE1od39h4p.Xdw/NgfUtZ9EVL1xNyYX1xVLoQnHAHS")
 //                .roles("USER");
 //    }
+
+    @Bean
+    public ApiCheckFilter apiCheckFilter() {
+        return new ApiCheckFilter("/notes/**/*",jwtUtil());
+    }
+
+    @Bean
+    public ApiLoginFilter apiLoginFilter() throws Exception {
+        ApiLoginFilter apiLoginFilter = new ApiLoginFilter("/api/login",jwtUtil());
+        apiLoginFilter.setAuthenticationManager(authenticationManager());
+
+        apiLoginFilter.setAuthenticationFailureHandler(new ApiLoginFailHandler());
+        return apiLoginFilter;
+    }
+    @Bean
+    public JWTUtil jwtUtil() {
+        return new JWTUtil();
+    }
 }

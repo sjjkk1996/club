@@ -71,7 +71,7 @@ public class ClubOAuth2UserDetailsService extends DefaultOAuth2UserService {
         }
         ClubMember clubMember = ClubMember.builder().email(email)
                 .name(email)
-                .password(passwordEncoder.encode("1111"))
+                .password(passwordEncoder.encode("1"))
                 .fromSocial(true)
                 .build();
         clubMember.addMemberRole(ClubMemberRole.USER);
