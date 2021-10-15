@@ -53,6 +53,16 @@ public class SampleController {
         String email = "user95@ds.com";
         String str = jwtUtil.generateToken(email);
         model.addAttribute("jwtValue", str);
-
+    }
+    @GetMapping("/login")
+    public void login(String error, String logout, Model model) {
+        log.info("login error: " + error);
+        log.info("login logout: " + logout);
+        if(error != null){
+            model.addAttribute("error" , "Login Error Check Your Account");
+        }
+        if(error != null){
+            model.addAttribute("logout", "Logout!");
+        }
     }
 }

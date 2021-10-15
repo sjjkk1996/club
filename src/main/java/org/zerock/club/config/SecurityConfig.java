@@ -35,7 +35,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 //        http.authorizeRequests()
 //                .antMatchers("/sample/all").permitAll()
 //                .antMatchers("/sample/member").hasRole("USER");
-        http.formLogin();
+//        http.formLogin();
+        //여기서 부터 커스터마이징 로그인페이지 설정임 시큐리티 로그인페이지를 안쓸거다 너무 기능이적어서
+        http.formLogin().loginPage("/sample/login").loginProcessingUrl("/login")
+                .successHandler(successHandler()).failureUrl("/sample/login?error");
         http.csrf().disable();
         http.logout();
         http.oauth2Login().successHandler(successHandler());

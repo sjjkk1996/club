@@ -32,7 +32,7 @@ public class ClubLoginSuccessHandler implements AuthenticationSuccessHandler {
         ClubAuthMemberDTO authMember = (ClubAuthMemberDTO) authentication.getPrincipal();
         boolean fromSocial = authMember.isFromSocial();
         log.info("Need Modify Member?" + fromSocial);
-        boolean passwordResult = passwordEncoder.matches("1111",authMember.getPassword());
+        boolean passwordResult = passwordEncoder.matches("1",authMember.getPassword());
         if(fromSocial && passwordResult) {
             redirectStrategy.sendRedirect(request, response, "/member/modify?from=social");
         }
